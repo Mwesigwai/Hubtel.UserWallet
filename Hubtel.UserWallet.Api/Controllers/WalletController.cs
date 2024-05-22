@@ -1,7 +1,7 @@
-﻿using Hubtel.UserWallet.Api.Data;
-using Hubtel.UserWallet.Api.ReturnTypes;
+﻿using Hubtel.UserWallet.Api.ReturnTypes;
 using Hubtel.UserWallet.Api.WalletModels;
 using Hubtel.UserWallet.Api.WalletModels.WalletEnums;
+using Hubtel.UserWallet.Api.WalletServices;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,6 +15,7 @@ namespace Hubtel.UserWallet.Api.Controllers
         IWalletService _service = service;
         
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<WalletDataModel>>> Get()
         {
             var wallets = await _service.GetAllAsync();
@@ -22,9 +23,11 @@ namespace Hubtel.UserWallet.Api.Controllers
         }
 
         [HttpGet("{id}",Name = "GetWallet")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Get(int id)
         {
-            var wallet = await _service.GetItem(id);
+            var wallet = await _service.GetWallet(id);
             if (wallet is null)
                 return BadRequest($"Wallet with id {id} does not exist");
             
@@ -34,7 +37,7 @@ namespace Hubtel.UserWallet.Api.Controllers
         /// <summary>
         /// This creates a new wallet
         /// </summary>
-        /// <param name="value"></param>
+        /// <param id="value"></param>
         /// <remarks>
         /// In order to post a wallet, you need to provide its wallet type and Wallet scheme.
         /// 
@@ -43,7 +46,7 @@ namespace Hubtel.UserWallet.Api.Controllers
         ///     
         ///     "0" for "Momo" 
         ///     
-        ///     "1" for "Card" wallet type
+        ///     "1" for "Card" 
         /// 
         /// Note 2: For wallet scheme, use:-
         ///        
@@ -57,12 +60,17 @@ namespace Hubtel.UserWallet.Api.Controllers
         ///       
         ///     4 for airteltigo
         ///         
+        /// Note 3:
+        /// 
+        /// After a successfull post, an object with the id of the wallet you created is returned.
+        /// 
+        /// You may use this to view the wallet in particular
         /// 
         /// </remarks>
-        ///
-        /// <returns>
+        ///<returns>
         /// 
         /// </returns>
+        /// 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -71,19 +79,24 @@ namespace Hubtel.UserWallet.Api.Controllers
             var result = await _service.CreateAsync(value);
             if(result.OperationSuccessful)
             {
-                var wallet = await _service.GetItem(_service.GetItem(value.Name).Id);
-                return CreatedAtRoute("GetWallet", new { id = _service.GetItem(value.Name).Id }, wallet);
+                var id = _service.GetWallet(value.Name).Id;
+                var walletSummery = new {walletId = id };
+                return Ok(walletSummery);
             }
               
             return BadRequest(result.Message);
         }
 
 
-        [HttpDelete("{name}")]
-        public async Task<ActionResult> Delete(string name)
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> Delete(int id)
         {
-            var result = await _service.RemoveWallet(name);
-            return walletResponse(result);
+            var result = await _service.RemoveWallet(id);
+            if (result.OperationSuccessful)
+                return Ok(result.Message);
+            return BadRequest(result.Message);
         }
 
         

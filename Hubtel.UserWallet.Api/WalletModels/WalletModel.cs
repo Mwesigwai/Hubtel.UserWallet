@@ -1,4 +1,5 @@
-﻿using Hubtel.UserWallet.Api.WalletModels.WalletEnums;
+﻿using Hubtel.UserWallet.Api.WalletModels.Interfaces;
+using Hubtel.UserWallet.Api.WalletModels.WalletEnums;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

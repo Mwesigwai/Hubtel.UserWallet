@@ -1,5 +1,6 @@
 ﻿using Hubtel.UserWallet.Api.Data;
 using Hubtel.UserWallet.Api.WalletModels;
+using Hubtel.UserWallet.Api.WalletModels.Interfaces;
 using Hubtel.UserWallet.Api.WalletModels.WalletEnums;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,9 +17,16 @@ namespace Hubtel.UserWallet.Api.ReusableMethods
 
         public async Task<bool> WalletExists(IWalletPostModel model, DataContext context)
         {
-            if (await context.Wallets.AnyAsync(w => w.Owner == model.Owner && w.Name == model.Name))
-                return true;
-            return false;
+            var cardAccNumber = model.AccountNumber[..6];
+            var momoAccNumber = model.AccountNumber;
+            if (model.WalletType is WalletType.Card)
+            {
+                return await walletExists(context, cardAccNumber);
+            }
+            else
+            {
+                return await walletExists(context, momoAccNumber);
+            }
         }
 
         public bool TypeAndSchemeMatch(IWalletPostModel model)
@@ -45,11 +53,11 @@ namespace Hubtel.UserWallet.Api.ReusableMethods
                 await context.Wallets.CountAsync() < 4;
         }
 
-        public async Task<WalletDataModel> GetWallet(string walletName,DataContext context)
+        public async Task<WalletDataModel> GetWallet(int id,DataContext context)
         {
             var wallet = await
                          context.Wallets
-                         .FirstOrDefaultAsync(w => w.Name == walletName);
+                         .FirstOrDefaultAsync(w => w.ID == id);
            
             return wallet!;
         }
@@ -62,10 +70,23 @@ namespace Hubtel.UserWallet.Api.ReusableMethods
             return wallet!;
         }
 
+
+
         public async Task<WalletDataModel> GetByName(string name, DataContext context)
         {
             var wallet = await context.Wallets.FirstOrDefaultAsync(w => w.Name == name);
             return wallet!;
         }
+
+
+
+        private async Task<bool> walletExists(DataContext context, string accountNumber) 
+        {
+            var walletExists = await context
+                                        .Wallets
+                                        .AnyAsync(w => w.AccountNumber == accountNumber);
+            return walletExists;
+        }
     }
 }
+

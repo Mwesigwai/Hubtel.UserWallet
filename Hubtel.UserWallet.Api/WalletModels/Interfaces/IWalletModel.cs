@@ -1,6 +1,6 @@
 ﻿using Hubtel.UserWallet.Api.WalletModels.WalletEnums;
 
-namespace Hubtel.UserWallet.Api.WalletModels
+namespace Hubtel.UserWallet.Api.WalletModels.Interfaces
 {
     public interface IWalletModel
     {

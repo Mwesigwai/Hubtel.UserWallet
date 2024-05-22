@@ -1,31 +1,33 @@
-﻿using Hubtel.UserWallet.Api.ReturnTypes;
+﻿using Hubtel.UserWallet.Api.Data;
+using Hubtel.UserWallet.Api.ReturnTypes;
 using Hubtel.UserWallet.Api.ReusableMethods;
 using Hubtel.UserWallet.Api.WalletModels;
+using Hubtel.UserWallet.Api.WalletModels.Interfaces;
 using Hubtel.UserWallet.Api.WalletModels.WalletEnums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace Hubtel.UserWallet.Api.Data
+namespace Hubtel.UserWallet.Api.WalletServices
 {
     public class WalletService(DataContext context, IHelperMethods helper) : IWalletService
     {
         DataContext _context = context;
         IHelperMethods _helper = helper;
 
-        public async Task<WalletDataModel> GetItem(int id)
+        public async Task<WalletDataModel> GetWallet(int id)
         {
-            var wallet = await _helper.GetById(id,_context);
+            var wallet = await _helper.GetById(id, _context);
             return wallet!;
         }
 
-        public async Task<WalletDataModel> GetItem(string name)
+        public async Task<WalletDataModel> GetWallet(string name)
         {
             var wallet = await _helper.GetByName(name, _context);
             return wallet!;
         }
-        public async Task<WalletServiceResponse> RemoveWallet(string walletName)
+        public async Task<WalletServiceResponse> RemoveWallet(int id)
         {
-            var wallet = await _helper.GetWallet(walletName,_context);
+            var wallet = await _helper.GetWallet(id, _context);
             if (wallet == null)
             {
                 return new WalletServiceResponse
@@ -71,7 +73,15 @@ namespace Hubtel.UserWallet.Api.Data
             {
                 return new()
                 {
-                    Message = $"Wallet {model.Name} already exists ",
+                    Message = $"Wallet with account number '{model.AccountNumber}' already exists ",
+                    OperationSuccessful = false
+                };
+            }
+            if (model.AccountNumber.Length < 6)
+            {
+                return new()
+                {
+                    Message = $"Account number should be above 6 characters",
                     OperationSuccessful = false
                 };
             }
@@ -98,6 +108,6 @@ namespace Hubtel.UserWallet.Api.Data
 
         }
 
-        
+
     }
 }

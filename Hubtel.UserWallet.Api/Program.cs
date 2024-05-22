@@ -1,5 +1,6 @@
 using Hubtel.UserWallet.Api.Data;
 using Hubtel.UserWallet.Api.ReusableMethods;
+using Hubtel.UserWallet.Api.WalletServices;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
