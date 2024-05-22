@@ -13,12 +13,12 @@ namespace Hubtel.UserWallet.Tests
 {
     public class GenerateAccountNumberTest()
     {
-        IHelperMethods _helper = new HelperMethods();
     
         [Fact]
         public void HelperMethods_GenerateAccountNumber_returns_6_characters_when_walletType_is_Card()
         {
             //arrange
+            IHelperMethods _helper = new HelperMethods();
             var walletType = WalletType.Card;
             string testAccountNumber = "5555555555Test";
             
