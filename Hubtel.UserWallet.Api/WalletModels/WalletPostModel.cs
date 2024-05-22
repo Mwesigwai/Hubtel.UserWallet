@@ -10,7 +10,7 @@ namespace Hubtel.UserWallet.Api.WalletModels
         public string Name { get; set; }
         [Required]
         public WalletType WalletType { get; set; }
-        [Required,MinLength(6)]
+        [Required,MinLength(6,ErrorMessage ="account number length should be atleast above 6")]
         public string AccountNumber { get; set; }
         [Required]
         public WalletScheme AccountScheme { get; set; }

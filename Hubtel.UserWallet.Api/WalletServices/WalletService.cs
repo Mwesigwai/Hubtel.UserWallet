@@ -77,14 +77,8 @@ namespace Hubtel.UserWallet.Api.WalletServices
                     OperationSuccessful = false
                 };
             }
-            if (model.AccountNumber.Length < 6)
-            {
-                return new()
-                {
-                    Message = $"Account number should be above 6 characters",
-                    OperationSuccessful = false
-                };
-            }
+            
+
             if (model is not null)
             {
                 var walletModel = new WalletDataModel
