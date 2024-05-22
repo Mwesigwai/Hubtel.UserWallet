@@ -1,0 +1,6 @@
+@Hubtel.UserWallet.Api_HostAddress = http://localhost:5168
+
+GET {{Hubtel.UserWallet.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
