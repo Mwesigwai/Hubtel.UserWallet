@@ -62,7 +62,6 @@ namespace Hubtel.UserWallet.Api.WalletServices
             }
             if (!await _helper.CanCreateMoreWalletsAsync(_context))
             {
-                //think about returning an object
                 return new()
                 {
                     Message = "Cannot create more than four wallets",
