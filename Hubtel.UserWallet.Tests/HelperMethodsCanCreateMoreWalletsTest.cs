@@ -37,42 +37,7 @@ namespace Hubtel.UserWallet.Tests
         public async Task HelperMethods_CanCreateMoreWallets_returns_false_when_4_are_Created()
         {
             //arrange
-            var wallet1 = new WalletPostModel
-            {
-                AccountNumber = "TestAccountNumber1",
-                Name = "MyName",
-                WalletType = Api.WalletModels.WalletEnums.WalletType.Momo,
-                AccountScheme = Api.WalletModels.WalletEnums.WalletScheme.mtn,
-                Owner = "MyPhoneNumber"
-            }; var wallet2 = new WalletPostModel
-            {
-                AccountNumber = "AccountNumber2",
-                Name = "MyName",
-                WalletType = Api.WalletModels.WalletEnums.WalletType.Card,
-                AccountScheme = Api.WalletModels.WalletEnums.WalletScheme.visa,
-                Owner = "MyPhoneNumber"
-            }; var wallet3 = new WalletPostModel
-            {
-                AccountNumber = "TestAccountNumber2",
-                Name = "MyName",
-                WalletType = Api.WalletModels.WalletEnums.WalletType.Momo,
-                AccountScheme = Api.WalletModels.WalletEnums.WalletScheme.aireteltigo,
-                Owner = "MyPhoneNumber"
-            }; var wallet4 = new WalletPostModel
-            {
-                AccountNumber = "MyAccountNumber4",
-                Name = "MyName",
-                WalletType = Api.WalletModels.WalletEnums.WalletType.Card,
-                AccountScheme = Api.WalletModels.WalletEnums.WalletScheme.mastercard,
-                Owner = "MyPhoneNumber"
-            }; var wallet5 = new WalletPostModel
-            {
-                AccountNumber = "FifthAccountNumber",
-                Name = "MyName",
-                WalletType = Api.WalletModels.WalletEnums.WalletType.Momo,
-                AccountScheme = Api.WalletModels.WalletEnums.WalletScheme.mtn,
-                Owner = "MyPhoneNumber"
-            };
+            var walletObject = new testWalletObjects();
             var helper = new HelperMethods();
             var service = new WalletService(dbcontext,helper);
             bool canCreateMore;
@@ -84,16 +49,16 @@ namespace Hubtel.UserWallet.Tests
             }
 
             //act 
-            await service.CreateAsync(wallet1);
+            await service.CreateAsync(walletObject.Wallet1);
             await CanCreateWallet();
 
-            await service.CreateAsync(wallet2);
+            await service.CreateAsync(walletObject.Wallet2);
             await CanCreateWallet();
 
-            await service.CreateAsync(wallet3);
+            await service.CreateAsync(walletObject.Wallet3);
             await CanCreateWallet();
 
-            await service.CreateAsync(wallet4);
+            await service.CreateAsync(walletObject.Wallet4);
 
             //assert
             canCreateMore = await helper.CanCreateMoreWalletsAsync(dbcontext);
