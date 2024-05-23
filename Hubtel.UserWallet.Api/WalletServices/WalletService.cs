@@ -52,6 +52,24 @@ namespace Hubtel.UserWallet.Api.WalletServices
 
         public async Task<WalletServiceResponse> CreateAsync(IWalletPostModel model)
         {
+            var walletSchemeEnumLength = Enum.GetNames(typeof(WalletScheme)).Length;
+            var walletTypeLength = Enum.GetNames(typeof(WalletType)).Length;
+            
+            if (model.WalletType < 0 || (int)model.WalletType > walletTypeLength )
+            {   return new()
+                {
+                   Message = $"index {model.WalletType} was out of range\nuse \"0\" for \"Momo\" \r\n\r\n\"1\" for \"Card\" ",
+                   OperationSuccessful = false
+                };
+            }
+            if(model.AccountScheme < 0 || (int)model.AccountScheme > walletSchemeEnumLength)
+            {
+                return new()
+                {
+                    Message = $"index {model.AccountScheme} was out of range\nuse 0 for Visa,\r\n    \r\n1 for mastercard\r\n    \r\n2 for mtn\r\n   \r\n3 for vodafone\r\n  \r\n4 for airteltigo ",
+                    OperationSuccessful = false
+                };
+            }
             if (!_helper.TypeAndSchemeMatch(model))
             {
                 return new()
