@@ -6,10 +6,10 @@ namespace Hubtel.UserWallet.Api.WalletServices
 {
     public interface IWalletService
     {
-        Task<WalletServiceResponse> CreateAsync(IWalletPostModel model);
+        Task<IWalletServiceResponse> CreateAsync(IWalletPostModel model);
         Task<IEnumerable<WalletDataModel>> GetAllAsync();
-        Task<WalletDataModel> GetWallet(int id);
-        Task<WalletDataModel> GetWallet(string name);
-        Task<WalletServiceResponse> RemoveWallet(int id);
+        Task<IWalletDataModel> GetWallet(int id);
+        Task<IWalletDataModel> GetWallet(string name);
+        Task<IWalletServiceResponse> RemoveWallet(int id);
     }
 }

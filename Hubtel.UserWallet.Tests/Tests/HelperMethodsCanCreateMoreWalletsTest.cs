@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Hubtel.UserWallet.Api.WalletModels.Interfaces;
 using System.Runtime.InteropServices;
+using Hubtel.UserWallet.Api.ReturnTypes;
 
 namespace Hubtel.UserWallet.Tests.Tests
 {
@@ -37,9 +38,10 @@ namespace Hubtel.UserWallet.Tests.Tests
         public async Task HelperMethods_CanCreateMoreWallets_returns_false_when_4_are_Created()
         {
             //arrange
+            var responseFactory = new ServiceResponseFactory();
             var walletObject = new testWalletObjects();
             var helper = new HelperMethods();
-            var service = new WalletService(dbcontext, helper);
+            var service = new WalletService(dbcontext, helper, (IServiceResponseFactory<IWalletServiceResponse>)responseFactory);
             bool canCreateMore;
 
             async Task CanCreateWallet()

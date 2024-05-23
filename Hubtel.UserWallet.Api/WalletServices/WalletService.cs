@@ -9,40 +9,36 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Hubtel.UserWallet.Api.WalletServices
 {
-    public class WalletService(DataContext context, IHelperMethods helper) : IWalletService
+    public class WalletService
+        (DataContext context, 
+        IHelperMethods helper,
+        IServiceResponseFactory<IWalletServiceResponse> responseFactory) 
+        : IWalletService
     {
+        IServiceResponseFactory<IWalletServiceResponse> _responseFactory = responseFactory;
         DataContext _context = context;
         IHelperMethods _helper = helper;
 
-        public async Task<WalletDataModel> GetWallet(int id)
+        public async Task<IWalletDataModel> GetWallet(int id)
         {
             var wallet = await _helper.GetById(id, _context);
             return wallet!;
         }
 
-        public async Task<WalletDataModel> GetWallet(string name)
+        public async Task<IWalletDataModel> GetWallet(string name)
         {
             var wallet = await _helper.GetByName(name, _context);
             return wallet!;
         }
-        public async Task<WalletServiceResponse> RemoveWallet(int id)
+        public async Task<IWalletServiceResponse> RemoveWallet(int id)
         {
             var wallet = await _helper.GetWallet(id, _context);
             if (wallet == null)
-            {
-                return new WalletServiceResponse
-                {
-                    OperationSuccessful = false,
-                    Message = "wallet was not found"
-                };
-            }
+                return _responseFactory.GetResponse(false, "wallet was not found");
+            
             _context.Wallets.Remove(wallet);
             await _context.SaveChangesAsync();
-            return new WalletServiceResponse
-            {
-                OperationSuccessful = true,
-                Message = "wallet was deleted"
-            };
+            return _responseFactory.GetResponse(true, "wallet was deleted");
         }
 
         public async Task<IEnumerable<WalletDataModel>> GetAllAsync()
@@ -50,50 +46,25 @@ namespace Hubtel.UserWallet.Api.WalletServices
             return await _context.Wallets.ToListAsync();
         }
 
-        public async Task<WalletServiceResponse> CreateAsync(IWalletPostModel model)
+        public async Task<IWalletServiceResponse> CreateAsync(IWalletPostModel model)
         {
             var walletSchemeEnumLength = Enum.GetNames(typeof(WalletScheme)).Length;
             var walletTypeLength = Enum.GetNames(typeof(WalletType)).Length;
             
             if (model.WalletType < 0 || (int)model.WalletType >= walletTypeLength )
-            {   return new()
-                {
-                   Message = $"index {model.WalletType} was out of range\nuse \"0\" for \"Momo\" \r\n\r\n\"1\" for \"Card\" ",
-                   OperationSuccessful = false
-                };
-            }
-            if(model.AccountScheme < 0 || (int)model.AccountScheme > walletSchemeEnumLength)
-            {
-                return new()
-                {
-                    Message = $"index {model.AccountScheme} was out of range\nuse 0 for Visa,\r\n    \r\n1 for mastercard\r\n    \r\n2 for mtn\r\n   \r\n3 for vodafone\r\n  \r\n4 for airteltigo ",
-                    OperationSuccessful = false
-                };
-            }
+                return _responseFactory.GetResponse(false, $"index {model.WalletType} was out of range\nuse \"0\" for \"Momo\" \r\n\r\n\"1\" for \"Card\" ");
+
+            if (model.AccountScheme < 0 || (int)model.AccountScheme > walletSchemeEnumLength)
+                return _responseFactory.GetResponse(false, $"index {model.AccountScheme} was out of range\nuse 0 for Visa,\r\n    \r\n1 for mastercard\r\n    \r\n2 for mtn\r\n   \r\n3 for vodafone\r\n  \r\n4 for airteltigo ");
+
             if (!_helper.TypeAndSchemeMatch(model))
-            {
-                return new()
-                {
-                    Message = $"Value '{model.AccountScheme}' does not match with '{model.WalletType}'",
-                    OperationSuccessful = false
-                };
-            }
+                return _responseFactory.GetResponse(false, $"Value '{model.AccountScheme}' does not match with '{model.WalletType}'");
+
             if (!await _helper.CanCreateMoreWalletsAsync(_context))
-            {
-                return new()
-                {
-                    Message = "Cannot create more than four wallets",
-                    OperationSuccessful = false
-                };
-            }
+                return _responseFactory.GetResponse(false, "Cannot create more than four wallets");
+
             if (await _helper.WalletExists(model, _context))
-            {
-                return new()
-                {
-                    Message = $"Wallet with account number '{model.AccountNumber}' already exists ",
-                    OperationSuccessful = false
-                };
-            }
+                return _responseFactory.GetResponse(false, $"Wallet with account number '{model.AccountNumber}' already exists ");
             
 
             if (model is not null)
@@ -111,14 +82,8 @@ namespace Hubtel.UserWallet.Api.WalletServices
                 await _context.Wallets.AddAsync(walletModel);
                 await _context.SaveChangesAsync();
             }
-            return new()
-            {
-                Message = "Wallet created",
-                OperationSuccessful = true
-            };
-
+            return _responseFactory.GetResponse(true, "Wallet created");
         }
-
 
     }
 }
