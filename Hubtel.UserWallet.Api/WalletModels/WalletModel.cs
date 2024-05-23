@@ -6,8 +6,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hubtel.UserWallet.Api.WalletModels
 {
-    [Table("user_wallets")]
-    [PrimaryKey(nameof(Name),nameof(ID))]
     public class WalletModel : IWalletModel
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -1,11 +1,13 @@
-﻿using Hubtel.UserWallet.Api.WalletModels.WalletEnums;
+﻿using Hubtel.UserWallet.Api.WalletModels.Interfaces;
+using Hubtel.UserWallet.Api.WalletModels.WalletEnums;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hubtel.UserWallet.Api.WalletModels
 {
-    
-    public class WalletDataModel
+
+    public class WalletDataModel : IWalletDataModel
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
