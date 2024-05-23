@@ -94,9 +94,7 @@ namespace Hubtel.UserWallet.Api.Controllers
         public async Task<ActionResult> Delete(int id)
         {
             var result = await _service.RemoveWallet(id);
-            if (result.OperationSuccessful)
-                return Ok(result.Message);
-            return BadRequest(result.Message);
+            return walletResponse(result);
         }
 
         
