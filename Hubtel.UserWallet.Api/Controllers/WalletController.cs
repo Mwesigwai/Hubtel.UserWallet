@@ -90,7 +90,7 @@ namespace Hubtel.UserWallet.Api.Controllers
             }
             catch (Exception)
             {
-
+                return BadRequest();
             }
         }
 
