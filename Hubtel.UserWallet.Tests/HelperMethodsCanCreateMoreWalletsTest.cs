@@ -59,9 +59,9 @@ namespace Hubtel.UserWallet.Tests
             await CanCreateWallet();
 
             await service.CreateAsync(walletObject.Wallet4);
+            canCreateMore = await helper.CanCreateMoreWalletsAsync(dbcontext);
 
             //assert
-            canCreateMore = await helper.CanCreateMoreWalletsAsync(dbcontext);
             canCreateMore.Should().BeFalse();
         }
     }
