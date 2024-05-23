@@ -76,15 +76,22 @@ namespace Hubtel.UserWallet.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<WalletServiceResponse>> Post([FromBody] WalletPostModel value)
         {
-            var result = await _service.CreateAsync(value);
-            if(result.OperationSuccessful)
+            try
             {
-                var id = _service.GetWallet(value.Name).Id;
-                var walletSummery = new {walletId = id };
-                return Ok(walletSummery);
+                var result = await _service.CreateAsync(value);
+                if (result.OperationSuccessful)
+                {
+                    var id = _service.GetWallet(value.Name).Id;
+                    var walletSummery = new { walletId = id };
+                    return Ok(walletSummery);
+                }
+
+                return BadRequest(result.Message);
             }
-              
-            return BadRequest(result.Message);
+            catch (Exception)
+            {
+
+            }
         }
 
 

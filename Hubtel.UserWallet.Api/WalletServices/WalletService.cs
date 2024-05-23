@@ -55,7 +55,7 @@ namespace Hubtel.UserWallet.Api.WalletServices
             var walletSchemeEnumLength = Enum.GetNames(typeof(WalletScheme)).Length;
             var walletTypeLength = Enum.GetNames(typeof(WalletType)).Length;
             
-            if (model.WalletType < 0 || (int)model.WalletType > walletTypeLength )
+            if (model.WalletType < 0 || (int)model.WalletType >= walletTypeLength )
             {   return new()
                 {
                    Message = $"index {model.WalletType} was out of range\nuse \"0\" for \"Momo\" \r\n\r\n\"1\" for \"Card\" ",
