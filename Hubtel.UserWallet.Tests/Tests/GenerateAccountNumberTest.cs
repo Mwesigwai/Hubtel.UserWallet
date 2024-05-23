@@ -9,11 +9,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hubtel.UserWallet.Tests
+namespace Hubtel.UserWallet.Tests.Tests
 {
     public class GenerateAccountNumberTest()
     {
-    
+
         [Fact]
         public void HelperMethods_GenerateAccountNumber_returns_6_characters_when_walletType_is_Card()
         {
@@ -21,7 +21,7 @@ namespace Hubtel.UserWallet.Tests
             IHelperMethods _helper = new HelperMethods();
             var walletType = WalletType.Card;
             string testAccountNumber = "5555555555Test";
-            
+
             //act
             var accountNumber = _helper.GenerateAccountNumber(testAccountNumber, walletType);
 

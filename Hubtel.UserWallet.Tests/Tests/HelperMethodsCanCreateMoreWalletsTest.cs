@@ -14,9 +14,9 @@ using System.Threading.Tasks;
 using Hubtel.UserWallet.Api.WalletModels.Interfaces;
 using System.Runtime.InteropServices;
 
-namespace Hubtel.UserWallet.Tests
+namespace Hubtel.UserWallet.Tests.Tests
 {
-    
+
     public class HelperMethodsCanCreateMoreWalletsTest
     {
         DataContext dbcontext;
@@ -31,7 +31,7 @@ namespace Hubtel.UserWallet.Tests
                 dbcontext.Database.EnsureCreated();
             }
 
-            
+
         }
         [Fact]
         public async Task HelperMethods_CanCreateMoreWallets_returns_false_when_4_are_Created()
@@ -39,9 +39,9 @@ namespace Hubtel.UserWallet.Tests
             //arrange
             var walletObject = new testWalletObjects();
             var helper = new HelperMethods();
-            var service = new WalletService(dbcontext,helper);
+            var service = new WalletService(dbcontext, helper);
             bool canCreateMore;
-           
+
             async Task CanCreateWallet()
             {
                 canCreateMore = await helper.CanCreateMoreWalletsAsync(dbcontext);
