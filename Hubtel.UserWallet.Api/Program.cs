@@ -17,7 +17,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IWalletService, WalletService>();
-builder.Services.AddScoped<IHelperMethods, HelperMethods>();
+builder.Services.AddSingleton<IHelperMethods, HelperMethods>();
 builder.Services.AddSingleton<IServiceResponseFactory<IWalletServiceResponse>, ServiceResponseFactory>();
 builder.Services.AddDbContext<DataContext>(
     o => o.UseInMemoryDatabase(builder.Configuration.GetConnectionString("InMemoryDb")!));
